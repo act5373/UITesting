@@ -22,7 +22,7 @@ public class TigerCenterClass
 	{
 		System.setProperty("webdriver.chrome.driver", "webdrivers/chromedriver"); // can be replaced with Firefox driver
 		driver = new ChromeDriver(); // can be replaced with Firefox
-		baseUrl = ""; // TARGET URL
+		baseUrl = "https://"; // TARGET URL
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
