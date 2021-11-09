@@ -13,7 +13,9 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.io.Files;
 
@@ -48,28 +50,26 @@ public class TigerCenterTest2
 		assertEquals("Class Search", classButton.getText());
 		classButton.click();
 
-		WebElement searchBar = driver.findElement(By.xpath(
-			"/html/body/div[1]/app-root/div[2]/mat-sidenav-container[2]/mat-sidenav-content/div[2]/class-search/div/div[2]/form/div/ng2-completer/div/input"));
+		WebDriverWait wait = new WebDriverWait(driver, 30);
+		WebElement searchBar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(
+			"/html/body/div[1]/app-root/div[2]/mat-sidenav-container[2]/mat-sidenav-content/div[2]/class-search/div/div[2]/form/div/ng2-completer/div/input")));
 		searchBar.sendKeys("SWEN 352");
 
-		Thread.sleep(1000);
-		Select formChange = new Select(driver.findElement(By.xpath(
-			"/html/body/div[1]/app-root/div[2]/mat-sidenav-container[2]/mat-sidenav-content/div[2]/class-search/div/div[2]/form/div/div[3]/div/select")));
-		
-		
-		
+		Select formChange = new Select(wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(
+			"#hideTerm > div:nth-child(1) > select:nth-child(1)"))));
+
 		formChange.selectByValue("1: 0");
 
 		driver.findElement(By.xpath(
 			"/html/body/div[1]/app-root/div[2]/mat-sidenav-container[2]/mat-sidenav-content/div[2]/class-search/div/div[2]/form/div/button"))
 			.click();
-
-		File f = driver.findElement(By.name("body")).getScreenshotAs(OutputType.FILE);
-
-		Files.copy(f, new File("xd.png"));
-
+		
+		WebElement table = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[1]/app-root/div[2]/mat-sidenav-container[2]/mat-sidenav-content/div[2]/class-search/div/div[2]/div[4]/div[5]")));
+		
+		File f = new File("screenshot.png");
+		f.createNewFile();
+		Files.copy(table.getScreenshotAs(OutputType.FILE), f);
 		// /html/body/div[1]/app-root/div[2]/mat-sidenav-container[2]/mat-sidenav-content/div[2]/class-search/div/div[2]/div[4]/div[5]
-
 	}
 
 }
