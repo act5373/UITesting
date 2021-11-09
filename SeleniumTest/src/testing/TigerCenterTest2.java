@@ -53,25 +53,20 @@ public class TigerCenterTest2
 		searchBar.sendKeys("SWEN 352");
 
 		Thread.sleep(1000);
-		WebElement elem = driver.findElement(By.xpath(
-			"/html/body/div[1]/app-root/div[2]/mat-sidenav-container[2]/mat-sidenav-content/div[2]/class-search/div/div[2]/form/div/div[3]/div/select"));
+		Select formChange = new Select(driver.findElement(By.xpath(
+			"/html/body/div[1]/app-root/div[2]/mat-sidenav-container[2]/mat-sidenav-content/div[2]/class-search/div/div[2]/form/div/div[3]/div/select")));
 		
-		elem.click();
 		
-		System.out.println(elem);
-		System.out.println(elem.getText());
 		
-		File f = elem.getScreenshotAs(OutputType.FILE);
-		
-//		.selectByValue("1: 0");
+		formChange.selectByValue("1: 0");
 
 		driver.findElement(By.xpath(
 			"/html/body/div[1]/app-root/div[2]/mat-sidenav-container[2]/mat-sidenav-content/div[2]/class-search/div/div[2]/form/div/button"))
 			.click();
 
-//		File f = driver.findElement(By.name("body")).getScreenshotAs(OutputType.FILE);
-//
-//		Files.copy(f, new File("xd.png"));
+		File f = driver.findElement(By.name("body")).getScreenshotAs(OutputType.FILE);
+
+		Files.copy(f, new File("xd.png"));
 
 		// /html/body/div[1]/app-root/div[2]/mat-sidenav-container[2]/mat-sidenav-content/div[2]/class-search/div/div[2]/div[4]/div[5]
 
