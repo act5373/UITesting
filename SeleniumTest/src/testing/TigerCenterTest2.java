@@ -2,22 +2,20 @@ package testing;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.google.common.io.Files;
 
 public class TigerCenterTest2
 {
@@ -66,10 +64,25 @@ public class TigerCenterTest2
 		
 		WebElement table = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[1]/app-root/div[2]/mat-sidenav-container[2]/mat-sidenav-content/div[2]/class-search/div/div[2]/div[4]/div[5]")));
 		
-		File f = new File("screenshot.png");
-		f.createNewFile();
-		Files.copy(table.getScreenshotAs(OutputType.FILE), f);
-		// /html/body/div[1]/app-root/div[2]/mat-sidenav-container[2]/mat-sidenav-content/div[2]/class-search/div/div[2]/div[4]/div[5]
+		List<String> toFind = new ArrayList<>();
+		toFind.add("Tue Thu");
+		toFind.add("05:00 PM - 06:15 PM");
+		toFind.add("Zhe Yu");
+		toFind.add("GOL 1520");
+		
+		for(WebElement e : table.findElements(By.cssSelector("app-class-search-row.ng-star-inserted")))
+		{
+			for(String s : e.getText().split("\n"))
+			{
+				if(toFind.contains(s))
+				{
+					toFind.remove(s);
+				}
+			}
+			
+			assertEquals(new ArrayList<>(), toFind);
+		}
+		// Days, Time, Location & instructor of the class.
 	}
 
 }
