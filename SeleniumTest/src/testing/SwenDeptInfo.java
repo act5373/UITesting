@@ -18,7 +18,7 @@ Department
 College
 Address for the Golisano College of Computing and Information Sciences
  */
-public class TigerCenterTest3
+public class SwenDeptInfo
 {
 	private WebDriver driver;
 
