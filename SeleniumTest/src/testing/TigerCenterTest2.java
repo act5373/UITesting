@@ -31,6 +31,12 @@ public class TigerCenterTest2
 		driver = new ChromeDriver(); // can be replaced with Firefox
 		baseUrl = "https://"; // TARGET URL
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		
+		driver.get(baseUrl + "tigercenter.rit.edu/tigerCenterApp/landing");
+		WebElement classButton = driver.findElement(By.xpath(
+			"//*[@id=\"angularApp\"]/app-root/div[2]/mat-sidenav-container[2]/mat-sidenav-content/div[2]/landing-page/div/div/div/div/div[4]/a[1]"));
+		assertEquals("Class Search", classButton.getText());
+		classButton.click();
 	}
 
 	@AfterEach
@@ -39,19 +45,12 @@ public class TigerCenterTest2
 		driver.quit();
 	}
 
-	@Test
-	public void testClassSearchButton() throws Exception
+	private void test(String searchTerm)
 	{
-		driver.get(baseUrl + "tigercenter.rit.edu/tigerCenterApp/landing");
-		WebElement classButton = driver.findElement(By.xpath(
-			"//*[@id=\"angularApp\"]/app-root/div[2]/mat-sidenav-container[2]/mat-sidenav-content/div[2]/landing-page/div/div/div/div/div[4]/a[1]"));
-		assertEquals("Class Search", classButton.getText());
-		classButton.click();
-
 		WebDriverWait wait = new WebDriverWait(driver, 30);
 		WebElement searchBar = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(
 			"/html/body/div[1]/app-root/div[2]/mat-sidenav-container[2]/mat-sidenav-content/div[2]/class-search/div/div[2]/form/div/ng2-completer/div/input")));
-		searchBar.sendKeys("SWEN 352");
+		searchBar.sendKeys(searchTerm);
 
 		Select formChange = new Select(wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(
 			"#hideTerm > div:nth-child(1) > select:nth-child(1)"))));
@@ -64,25 +63,68 @@ public class TigerCenterTest2
 		
 		WebElement table = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[1]/app-root/div[2]/mat-sidenav-container[2]/mat-sidenav-content/div[2]/class-search/div/div[2]/div[4]/div[5]")));
 		
-		List<String> toFind = new ArrayList<>();
-		toFind.add("Tue Thu");
-		toFind.add("05:00 PM - 06:15 PM");
-		toFind.add("Zhe Yu");
-		toFind.add("GOL 1520");
-		
 		for(WebElement e : table.findElements(By.cssSelector("app-class-search-row.ng-star-inserted")))
 		{
-			for(String s : e.getText().split("\n"))
+			// print Days, Time, Location & instructor of the class
+			String[] s = e.getText().split("\n");
+			
+			List<String> actual = new ArrayList<>();
+			boolean found = false;
+			for(String str : s)
 			{
-				if(toFind.contains(s))
+				if(found)
 				{
-					toFind.remove(s);
+					actual.add(str);
+				}
+				else
+				{
+					try
+					{
+						Integer.parseInt(str);
+						found = true;
+					}
+					catch(NumberFormatException ex) 
+					{
+						
+					}
 				}
 			}
 			
-			assertEquals(new ArrayList<>(), toFind);
+			System.out.println("Course: " + s[0]);
+			System.out.println("Days: " + actual.get(0));
+			System.out.println("Time: " + actual.get(1));
+			System.out.println("Location: " + actual.get(2));
+			System.out.println("Instructor: " + actual.get(3));
+			
+			System.out.println();
 		}
 		// Days, Time, Location & instructor of the class.
+		
+		try
+		{
+			Thread.sleep(3000);
+		}
+		catch (InterruptedException e1)
+		{
+			e1.printStackTrace();
+		}
 	}
-
+	
+	@Test
+	public void test352() throws Exception
+	{
+		test("SWEN 352");
+	}
+	
+	@Test
+	public void test262() throws Exception
+	{
+		test("SWEN 262");
+	}
+	
+	@Test
+	public void testCSCI() throws Exception
+	{
+		test("CSCI 261");
+	}
 }
